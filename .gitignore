@@ -1,0 +1,15 @@
+# Vivado generated folders
+uart_project.cache/
+uart_project.hw/
+uart_project.runs/
+uart_project.sim/
+uart_project.gen/
+.ip_user_files/
+
+# logs and reports
+*.log
+*.jou
+*.rpt
+*.pb
+*.str
+*.dcp
