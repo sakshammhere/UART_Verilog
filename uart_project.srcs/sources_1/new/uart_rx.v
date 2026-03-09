@@ -1,11 +1,12 @@
-module uart_tx(
+module uart_rx(
 
 input clk,
 input reset,
-input start,
+input rx,
 input baud_tick,
-input [7:0] data,
-output reg tx
+
+output reg [7:0] data_out,
+output reg data_valid
 
 );
 
@@ -23,8 +24,10 @@ begin
     if(reset)
     begin
         state <= IDLE;
-        tx <= 1;
         bit_index <= 0;
+        data_reg <= 0;
+        data_out <= 0;
+        data_valid <= 0;
     end
 
     else if(baud_tick)
@@ -33,25 +36,21 @@ begin
 
         IDLE:
         begin
-            tx <= 1;
+            data_valid <= 0;
 
-            if(start)
-            begin
-                data_reg <= data;
+            if(rx == 0)
                 state <= START;
-            end
         end
 
         START:
         begin
-            tx <= 0;
-            state <= DATA;
             bit_index <= 0;
+            state <= DATA;
         end
 
         DATA:
         begin
-            tx <= data_reg[bit_index];
+            data_reg[bit_index] <= rx;
 
             if(bit_index == 7)
                 state <= STOP;
@@ -61,7 +60,8 @@ begin
 
         STOP:
         begin
-            tx <= 1;
+            data_out <= data_reg;
+            data_valid <= 1;
             state <= IDLE;
         end
 

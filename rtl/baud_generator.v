@@ -6,22 +6,20 @@ output reg baud_tick
 
 );
 
-parameter BAUD_COUNT = 5208;
+parameter BAUD_DIV = 5208;  // for 50MHz → 9600 baud
 
 reg [12:0] counter;
 
 always @(posedge clk or posedge reset)
 begin
-
     if(reset)
     begin
         counter <= 0;
         baud_tick <= 0;
     end
-
     else
     begin
-        if(counter == BAUD_COUNT-1)
+        if(counter == BAUD_DIV-1)
         begin
             counter <= 0;
             baud_tick <= 1;
@@ -32,7 +30,6 @@ begin
             baud_tick <= 0;
         end
     end
-
 end
 
 endmodule
